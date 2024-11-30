@@ -1,1 +1,3 @@
-# YandexProject3_Mesto_Java
+# Проектная работа Mesto
+
+студент, когорта, стэк
