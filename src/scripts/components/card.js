@@ -1,7 +1,7 @@
+import { cardTemplate, imagePopup } from './index.js';
 import { openModal } from './modal.js';
 
-export function createCard(info, templateSelector, popupSelector) {
-  const cardTemplate = document.querySelector(templateSelector).content;
+export function createCard(info) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
 
   const cardImage = cardElement.querySelector('.card__image');
@@ -13,11 +13,14 @@ export function createCard(info, templateSelector, popupSelector) {
   cardImage.alt = info.name;
   cardTitle.textContent = info.name;
 
+  // Обработчик кнопки удаления
   deleteButton.addEventListener('click', () => cardElement.remove());
+
+  // Обработчик лайка
   likeButton.addEventListener('click', () => likeButton.classList.toggle('card__like-button_is-active'));
 
+  // Обработчик клика на картинку
   cardImage.addEventListener('click', () => {
-    const imagePopup = document.querySelector(popupSelector);
     const imagePopupImage = imagePopup.querySelector('.popup__image');
     const imagePopupCaption = imagePopup.querySelector('.popup__caption');
 
