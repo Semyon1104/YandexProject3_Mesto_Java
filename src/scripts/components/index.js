@@ -1,7 +1,17 @@
+
 import '../../pages/index.css';
 import { openModal, closeModal, addCloseButtonListeners, addPopupClickListeners, addEscapeKeyListener } from './modal.js';
 import { createCard } from './card.js';
+import { enableValidation, toggleButtonState } from './validate.js';
 
+import logo from '../../images/logo.svg';
+import avatar from '../../images/avatar.jpg';
+
+const logoImage = document.querySelector('.header__logo');
+logoImage.src = logo;
+
+const avatarImage = document.querySelector('.profile__image');
+avatarImage.style.backgroundImage = `url(${avatar})`;
 
 const initialCards = [
   { name: "Архыз", link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" },
@@ -28,6 +38,16 @@ const cardFormElement = cardPopup.querySelector('.popup__form');
 const cardNameInput = cardPopup.querySelector('.popup__input_type_card-name');
 const cardLinkInput = cardPopup.querySelector('.popup__input_type_url');
 const addCardButton = document.querySelector('.profile__add-button');
+
+const validationSettings = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
+enableValidation(validationSettings);
 
 document.addEventListener('DOMContentLoaded', () => {
   addCloseButtonListeners();
@@ -80,6 +100,9 @@ document.addEventListener('keydown', evt => {
 addCardButton.addEventListener('click', () => {
   cardNameInput.value = '';
   cardLinkInput.value = '';
+  const inputs = [cardNameInput, cardLinkInput];
+  const submitButton = cardFormElement.querySelector(validationSettings.submitButtonSelector);
+  toggleButtonState(inputs, submitButton, validationSettings);
   openModal(cardPopup);
 });
 
