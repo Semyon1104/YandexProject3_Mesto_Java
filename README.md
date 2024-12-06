@@ -31,3 +31,5 @@
 - **Webpack:** сборка проекта.
 - **BEM (Nested):** методология для именования классов CSS.
 - **Git:** система контроля версий.
+
+- https://semyon1104.github.io/YandexProject3_Mesto_Java/
