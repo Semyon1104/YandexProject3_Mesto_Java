@@ -11,7 +11,6 @@ import {
 } from './api.js';
 
 import logo from '../../images/logo.svg';
-
 const logoImage = document.querySelector('.header__logo');
 logoImage.src = logo;
 
@@ -33,6 +32,10 @@ const cardLinkInput = cardPopup.querySelector('.popup__input_type_url');
 const addCardButton = document.querySelector('.profile__add-button');
 const avatarInput = document.querySelector('.popup__input_type_avatar');
 const avatarPopup = document.querySelector('.popup_type_avatar');
+const editAvatarButton = document.querySelector('.profile__edit-avatar-button');
+const confirmPopup = document.querySelector('.popup_type_confirm');
+const confirmYesButton = confirmPopup.querySelector('.popup__button');
+
 
 const validationSettings = {
   formSelector: ".popup__form",
@@ -44,6 +47,17 @@ const validationSettings = {
 };
 enableValidation(validationSettings);
 
+function setLoadingState(button, isLoading, loadingText = "Сохранение...") {
+  if (isLoading) {
+    button.textContent = loadingText;
+    button.disabled = true;
+  } else {
+    button.textContent = button.dataset.defaultText;
+    button.disabled = false;
+  }
+}
+
+
 function showError(message) {
   const errorElement = document.querySelector('.error-message');
   if (errorElement) {
@@ -53,6 +67,14 @@ function showError(message) {
   } else {
     console.error(message);
   }
+}
+
+export function openConfirmPopup(onConfirm) {
+  openModal(confirmPopup);
+  confirmYesButton.onclick = () => {
+    onConfirm();
+    closeModal(confirmPopup);
+  };
 }
 
 function loadUserProfile() {
@@ -73,17 +95,22 @@ function fillProfileForm() {
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
+  const submitButton = evt.submitter; // Кнопка, которая отправила форму
+  setLoadingState(submitButton, true);
+
   const userData = {
     name: nameInput.value,
     about: jobInput.value,
   };
+
   updateUserData(userData)
     .then(user => {
       profileTitle.textContent = user.name;
       profileDescription.textContent = user.about;
       closeModal(profileFormElement.closest('.popup'));
     })
-    .catch(err => showError(`Ошибка обновления профиля: ${err}`));
+    .catch(err => showError(`Ошибка обновления профиля: ${err}`))
+    .finally(() => setLoadingState(submitButton, false));
 }
 
 editButton.addEventListener('click', () => {
@@ -103,9 +130,12 @@ addCardButton.addEventListener('click', () => {
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
+  const submitButton = evt.submitter;
+  setLoadingState(submitButton, true);
+
   const cardData = {
-    name: cardFormElement.querySelector('.popup__input_type_card-name').value,
-    link: cardFormElement.querySelector('.popup__input_type_url').value,
+    name: cardNameInput.value,
+    link: cardLinkInput.value,
   };
 
   createCardOnServer(cardData)
@@ -114,31 +144,33 @@ function handleCardFormSubmit(evt) {
       placesList.prepend(cardElement);
       closeModal(cardFormElement.closest('.popup'));
     })
-    .catch(err => showError(`Ошибка добавления карточки: ${err}`));
+    .catch(err => showError(`Ошибка добавления карточки: ${err}`))
+    .finally(() => setLoadingState(submitButton, false));
 }
+
 
 function handleAvatarUpdate(evt) {
   evt.preventDefault();
+  const submitButton = evt.submitter;
+  setLoadingState(submitButton, true);
 
-  const avatarUrl = avatarInput.value; // Получаем URL из поля ввода аватара
-  if (!avatarUrl) {
-    alert("Пожалуйста, укажите URL аватара.");
-    return;
-  }
+  const avatarUrl = avatarInput.value;
 
-  // Обновляем аватар через API
   updateAvatar(avatarUrl)
     .then(user => {
-      profileImage.style.backgroundImage = `url('${user.avatar}')`; // Обновляем аватар на странице
-      closeModal(avatarPopup); // Закрываем модальное окно, если оно было
+      profileImage.style.backgroundImage = `url('${user.avatar}')`;
+      closeModal(avatarPopup);
     })
-    .catch(err => {
-      console.error('Ошибка обновления аватара:', err);
-      alert("Не удалось обновить аватар.");
-    });
+    .catch(err => showError(`Ошибка обновления аватара: ${err}`))
+    .finally(() => setLoadingState(submitButton, false));
 }
 
+
 document.querySelector('.popup__form_type_avatar').addEventListener('submit', handleAvatarUpdate);
+
+editAvatarButton.addEventListener('click', () => {
+  openModal(avatarPopup);
+});
 
 function loadInitialCards() {
   fetchInitialCards()

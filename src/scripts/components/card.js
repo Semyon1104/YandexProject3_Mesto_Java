@@ -1,4 +1,4 @@
-import { cardTemplate, imagePopup } from './index.js';
+import { cardTemplate, imagePopup, openConfirmPopup} from './index.js';
 import { openModal } from './modal.js';
 import { toggleLikeOnServer, deleteCard, cohortId as currentUserId, token } from './api.js';
 
@@ -27,14 +27,13 @@ export function createCard(info) {
 
   // Обработчик удаления карточки
   deleteButton.addEventListener('click', () => {
-    if (info.owner._id === '12e7b86937b167477a9e7892') {
-      // Удаление карточки через API
+    openConfirmPopup(() => {
       deleteCard(info._id)
         .then(() => {
           cardElement.remove(); // Удаляем карточку из DOM
         })
         .catch(err => console.error('Ошибка при удалении карточки:', err));
-    }
+    });
   });
 
   // Обработчик лайка

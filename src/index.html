@@ -34,6 +34,17 @@
       © 2021 Mesto Russia
     </p>
   </footer>
+
+  <div class="popup popup_type_confirm">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h2 class="popup__title">Вы уверены?</h2>
+      <div class="popup__buttons">
+        <button class="button popup__button popup__button_confirm-yes">Да</button>
+      </div>
+    </div>
+  </div>
+
   <div class="popup popup_type_edit">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
@@ -46,7 +57,7 @@
         <input type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" required minlength="2" 
         maxlength="200">
         <span class="popup__error popup__error_description"></span>
-        <button type="submit" class="button popup__button">Сохранить</button>
+        <button type="submit" class="button popup__button" data-default-text="Сохранить">Сохранить</button>
       </form>
     </div>
   </div>
@@ -58,7 +69,7 @@
       <form class="popup__form popup__form_type_avatar" name="avatar-update" novalidate>
         <input type="url" name="avatar" class="popup__input popup__input_type_avatar" placeholder="URL аватара" required>
         <span class="popup__error popup__error_avatar"></span>
-        <button type="submit" class="button popup__button">Сохранить</button>
+        <button type="submit" class="button popup__button" data-default-text="Сохранить">Сохранить</button>
       </form>
     </div>
   </div>
@@ -74,7 +85,7 @@
         <span class="popup__error popup__error_place-name"></span>
         <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
         <span class="popup__error popup__error_link"></span>
-        <button type="submit" class="button popup__button">Сохранить</button>
+        <button type="submit" class="button popup__button" data-default-text="Сохранить">Сохранить</button>
         
       </form>
 
