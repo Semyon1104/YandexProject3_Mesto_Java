@@ -7,7 +7,7 @@ import {
   fetchUserData,
   fetchInitialCards,
   createCard as createCardOnServer,
-  updateUserData,
+  updateUserData, updateAvatar
 } from './api.js';
 
 import logo from '../../images/logo.svg';
@@ -31,6 +31,8 @@ const cardFormElement = cardPopup.querySelector('.popup__form');
 const cardNameInput = cardPopup.querySelector('.popup__input_type_card-name');
 const cardLinkInput = cardPopup.querySelector('.popup__input_type_url');
 const addCardButton = document.querySelector('.profile__add-button');
+const avatarInput = document.querySelector('.popup__input_type_avatar');
+const avatarPopup = document.querySelector('.popup_type_avatar');
 
 const validationSettings = {
   formSelector: ".popup__form",
@@ -114,6 +116,29 @@ function handleCardFormSubmit(evt) {
     })
     .catch(err => showError(`Ошибка добавления карточки: ${err}`));
 }
+
+function handleAvatarUpdate(evt) {
+  evt.preventDefault();
+
+  const avatarUrl = avatarInput.value; // Получаем URL из поля ввода аватара
+  if (!avatarUrl) {
+    alert("Пожалуйста, укажите URL аватара.");
+    return;
+  }
+
+  // Обновляем аватар через API
+  updateAvatar(avatarUrl)
+    .then(user => {
+      profileImage.style.backgroundImage = `url('${user.avatar}')`; // Обновляем аватар на странице
+      closeModal(avatarPopup); // Закрываем модальное окно, если оно было
+    })
+    .catch(err => {
+      console.error('Ошибка обновления аватара:', err);
+      alert("Не удалось обновить аватар.");
+    });
+}
+
+document.querySelector('.popup__form_type_avatar').addEventListener('submit', handleAvatarUpdate);
 
 function loadInitialCards() {
   fetchInitialCards()

@@ -1,5 +1,5 @@
-const token = '4fefb438-d6d3-4f56-8ce3-dd2f900eb93d';
-const cohortId = 'frontend-st-cohort-201';
+export const token = '4fefb438-d6d3-4f56-8ce3-dd2f900eb93d';
+export const cohortId = 'frontend-st-cohort-201';
 const baseUrl = `https://nomoreparties.co/v1/${cohortId}`;
 
 function checkResponse(res) {
@@ -45,4 +45,33 @@ export function createCard(cardData) {
 export function toggleLikeOnServer(cardId, like) {
   const method = like ? 'PUT' : 'DELETE';
   return sendRequest(`/cards/${cardId}/likes`, { method });
+}
+
+export function deleteCard(cardId) {
+  const cohortId = 'frontend-st-cohort-201'; 
+  return fetch(`https://nomoreparties.co/v1/${cohortId}/cards/${cardId}`, {
+    method: 'DELETE',
+    headers: {
+      authorization: token,
+    },
+  }).then(checkResponse);
+}
+
+export function updateAvatar(avatarUrl) {
+  return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token
+    },
+    body: JSON.stringify({
+      avatar: avatarUrl
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Не удалось обновить аватар');
+    }
+    return response.json();
+  });
 }
