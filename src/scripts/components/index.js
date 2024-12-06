@@ -95,7 +95,7 @@ function fillProfileForm() {
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
-  const submitButton = evt.submitter; // Кнопка, которая отправила форму
+  const submitButton = evt.submitter;
   setLoadingState(submitButton, true);
 
   const userData = {

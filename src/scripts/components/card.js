@@ -16,27 +16,25 @@ export function createCard(info) {
   likeButton.after(likeCount);
   console.log('Owner ID:', info.owner._id);
   console.log('Current User ID:', token);
-  // Проверяем, является ли текущий пользователь владельцем карточки
+
   if (info.owner._id !== '12e7b86937b167477a9e7892') {
-    deleteButton.style.display = 'none'; // Прячем кнопку удаления, если карточка не ваша
+    deleteButton.style.display = 'none';
   }
 
   cardImage.src = info.link;
   cardImage.alt = info.name;
   cardTitle.textContent = info.name;
 
-  // Обработчик удаления карточки
   deleteButton.addEventListener('click', () => {
     openConfirmPopup(() => {
       deleteCard(info._id)
         .then(() => {
-          cardElement.remove(); // Удаляем карточку из DOM
+          cardElement.remove();
         })
         .catch(err => console.error('Ошибка при удалении карточки:', err));
     });
   });
 
-  // Обработчик лайка
   likeButton.addEventListener('click', () => {
     const isLiked = likeButton.classList.contains('card__like-button_is-active');
     toggleLikeOnServer(info._id, !isLiked)
@@ -47,7 +45,6 @@ export function createCard(info) {
       .catch(err => console.error(`Ошибка изменения лайка: ${err}`));
   });
 
-  // Обработчик клика на картинку
   cardImage.addEventListener('click', () => {
     const imagePopupImage = imagePopup.querySelector('.popup__image');
     const imagePopupCaption = imagePopup.querySelector('.popup__caption');
