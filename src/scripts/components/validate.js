@@ -32,7 +32,7 @@ const showInputError = (form, input, settings) => {
   const errorElement = form.querySelector(`.popup__error_${input.name}`);
   if (errorElement) {
     input.classList.add(settings.inputErrorClass);
-    errorElement.textContent = input.validationMessage; // Отображаем сообщение ошибки
+    errorElement.textContent = input.validationMessage;
     errorElement.classList.add(settings.errorClass);
   }
 };

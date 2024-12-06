@@ -1,0 +1,48 @@
+const token = '4fefb438-d6d3-4f56-8ce3-dd2f900eb93d';
+const cohortId = 'frontend-st-cohort-201';
+const baseUrl = `https://nomoreparties.co/v1/${cohortId}`;
+
+function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+}
+
+function sendRequest(endpoint, options = {}) {
+  return fetch(`${baseUrl}${endpoint}`, {
+    ...options,
+    headers: {
+      authorization: token,
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  }).then(checkResponse);
+}
+
+export function fetchUserData() {
+  return sendRequest('/users/me');
+}
+
+export function updateUserData(userData) {
+  return sendRequest('/users/me', {
+    method: 'PATCH',
+    body: JSON.stringify(userData),
+  });
+}
+
+export function fetchInitialCards() {
+  return sendRequest('/cards');
+}
+
+export function createCard(cardData) {
+  return sendRequest('/cards', {
+    method: 'POST',
+    body: JSON.stringify(cardData),
+  });
+}
+
+export function toggleLikeOnServer(cardId, like) {
+  const method = like ? 'PUT' : 'DELETE';
+  return sendRequest(`/cards/${cardId}/likes`, { method });
+}
