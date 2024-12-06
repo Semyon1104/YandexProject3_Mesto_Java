@@ -13,7 +13,7 @@ import {
 import logo from '../../images/logo.svg';
 const logoImage = document.querySelector('.header__logo');
 logoImage.src = logo;
-
+let currentUserId = '';
 export const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
 const profilePopup = document.querySelector('.popup_type_edit');
@@ -80,9 +80,9 @@ export function openConfirmPopup(onConfirm) {
 function loadUserProfile() {
   fetchUserData()
     .then(user => {
+      currentUserId = user._id;
       profileTitle.textContent = user.name;
       profileDescription.textContent = user.about;
-      
       profileImage.style.backgroundImage = `url('${user.avatar}')`;
     })
     .catch(err => showError(`Ошибка загрузки данных пользователя: ${err}`));
@@ -140,7 +140,7 @@ function handleCardFormSubmit(evt) {
 
   createCardOnServer(cardData)
     .then(card => {
-      const cardElement = createCard(card);
+      const cardElement = createCard(card, currentUserId);
       placesList.prepend(cardElement);
       closeModal(cardFormElement.closest('.popup'));
     })
@@ -176,7 +176,7 @@ function loadInitialCards() {
   fetchInitialCards()
     .then(cards => {
       cards.forEach(cardData => {
-        const cardElement = createCard(cardData);
+        const cardElement = createCard(cardData, currentUserId);
         placesList.append(cardElement);
       });
     })
